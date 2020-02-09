@@ -1,3 +1,6 @@
+const getAnswers = require('./index')
+
+
 const colors = {
     green: {
       wrapperBackground: "#E6E1C3",
@@ -25,7 +28,7 @@ const colors = {
     }
   };
   
-  function generateHTML(data) {
+  function generateHTML(answers) {
     return `<!DOCTYPE html>
   <html lang="en">
      <head>
@@ -52,7 +55,7 @@ const colors = {
            height: 100%;
            }
            .wrapper {
-           background-color: ${colors[data.color].wrapperBackground};
+           background-color: ${colors[answers.color].wrapperBackground};
            padding-top: 100px;
            }
            body {
@@ -94,8 +97,8 @@ const colors = {
            display: flex;
            justify-content: center;
            flex-wrap: wrap;
-           background-color: ${colors[data.color].headerBackground};
-           color: ${colors[data.color].headerColor};
+           background-color: ${colors[answers.color].headerBackground};
+           color: ${colors[answers.color].headerColor};
            padding: 10px;
            width: 95%;
            border-radius: 6px;
@@ -106,7 +109,7 @@ const colors = {
            border-radius: 50%;
            object-fit: cover;
            margin-top: -75px;
-           border: 6px solid ${colors[data.color].photoBorderColor};
+           border: 6px solid ${colors[answers.color].photoBorderColor};
            box-shadow: rgba(0, 0, 0, 0.3) 4px 1px 20px 4px;
            }
            .photo-header h1, .photo-header h2 {
@@ -149,8 +152,8 @@ const colors = {
            .card {
              padding: 20px;
              border-radius: 6px;
-             background-color: ${colors[data.color].headerBackground};
-             color: ${colors[data.color].headerColor};
+             background-color: ${colors[answers.color].headerBackground};
+             color: ${colors[answers.color].headerColor};
              margin: 20px;
            }
            
@@ -173,3 +176,4 @@ const colors = {
         </style>`
           }
   
+          module.exports = generateHTML;
