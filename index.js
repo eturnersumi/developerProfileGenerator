@@ -4,12 +4,13 @@ const fs = require("fs");
 const util = require("util");
 const generateHTML = require('./generateHTML')
 const writeFileAsync = util.promisify(fs.writeFile);
+const convertHTMLToPDF = require("pdf-puppeteer");
 
-
+var dataobj = {};
 
 function getAnswers() {
     //return inquirer.prompt([
-    return inquirer.prompt([
+ inquirer.prompt([
     { 
         type: "input",
         name: "username",
@@ -22,47 +23,59 @@ function getAnswers() {
     }
     ])
     .then(answers => {
-        return answers.color;
-    })
-    // .then(function({ username }) {
-    //     const queryURL = `https://api.github.com/users/${username}`;        
-    //     axios.get(queryURL).then(function(result) {
-    //     return result.data.avatar_url, result.data.login, result.data.location, result.data.html_url, result.data.Bio, result.data.followers, result.data.following;
-    //     })
+        //console.log( answers);
 
-    //     const queryURL1 = `https://api.github.com/users/${username}/starred`;
-    //     axios.get(queryURL1).then(function(result) {
-    //     return result.data.length;
-    //     })
+        const queryURL = `https://api.github.com/users/${answers.username}`;        
+        axios.get(queryURL).then(function(result) {
+        var color = answers.color;
         
-    //     const queryURL2 = `https://api.github.com/users/${username}/repos`;
-    //     axios.get(queryURL2).then(function(result) {
-    //     return result.data.length;
-    //     })  
-    // })
+        const queryURL2 = `https://api.github.com/users/${answers.username}/repos`;
+         axios.get(queryURL2).then(function(starsData) {
 
+        let repos = starsData.data.length;
+            //console.log(`Number of repos = ${repos}`)
+        //loop to calculate the star
+        let stars = 0;
+        //console.log(starsData);
+       
+        for (let i = 0; i < starsData.data.length; i++) {
+            //console.log(starsData.data[i].stargazers_count)
+             stars = stars + starsData.data[i].stargazers_count
+             //repos = starsData.data[i].id.length;
+             //console.log(starsData.data[i].name)
+        }
+        
 
-// function writeToFile(fileName, data) {
+        dataobj = {color, stars, repos, ...result.data };
+        //console.log(object)
+  
+        const html = generateHTML(dataobj)
+          
+        console.log(html)
+        writeFileAsync("profile.html", html);
+        console.log("Successfully wrote to hmtl")
+            //  convert html to pdf
+            convertHTMLToPDF(html, callback)
+        // pdf.create(html, options).toFile('developer-profile.pdf', function(err, res) {
+        //     if (err) return console.log(err);
+        //     console.log(res);
+            
+        // })
+            })
+        })
+
+    })  
  
+ 
+ var callback = function(pdf) {
+    //  res.setHeader("Content-Type", "application/pdf");
+    //  res.toFile('developer-profile.pdf', function(err, res) {
+    //      if (err) return console.log(err);
+         //console.log(pdf)
+         writeFileAsync("developer-profile.pdf", pdf)
+         console.log("Successfully wrote to pdf")
+    //  })
  }
-
-async function init() {
-    console.log("Greetings wonderful person!")
-    try {
-        const data = await getAnswers();
-        const html = generateHTML();
-        await writeFileAsync("profile.pdf", html);
-        console.log("Successfully wrote to pdf")
-    } catch(err) {
-        console.log(err);
-    }
 }
 
-init();
-
-//module.exports = getAnswers();
-// module.exports = {
-//     username,
-//     color
-// }
-//module.exports = answers.color;
+getAnswers()

@@ -1,34 +1,32 @@
-const getAnswers = require('./index')
-
 
 const colors = {
     green: {
-      wrapperBackground: "#E6E1C3",
-      headerBackground: "#C1C72C",
-      headerColor: "black",
-      photoBorderColor: "#black"
+        wrapperBackground: "#E6E1C3",
+        headerBackground: "#C1C72C",
+        headerColor: "black",
+        photoBorderColor: "#black"
     },
     blue: {
-      wrapperBackground: "#5F64D3",
-      headerBackground: "#26175A",
-      headerColor: "white",
-      photoBorderColor: "#73448C"
+        wrapperBackground: "#5F64D3",
+        headerBackground: "#26175A",
+        headerColor: "white",
+        photoBorderColor: "#73448C"
     },
     pink: {
-      wrapperBackground: "#879CDF",
-      headerBackground: "#FF8374",
-      headerColor: "white",
-      photoBorderColor: "#FEE24C"
+        wrapperBackground: "#879CDF",
+        headerBackground: "#FF8374",
+        headerColor: "white",
+        photoBorderColor: "#FEE24C"
     },
     red: {
-      wrapperBackground: "#DE9967",
-      headerBackground: "#870603",
-      headerColor: "white",
-      photoBorderColor: "white"
+        wrapperBackground: "#DE9967",
+        headerBackground: "#870603",
+        headerColor: "white",
+        photoBorderColor: "white"
     }
-  };
-  
-  function generateHTML(answers) {
+};
+
+function generateHTML(answers) {
     return `<!DOCTYPE html>
   <html lang="en">
      <head>
@@ -173,7 +171,37 @@ const colors = {
               zoom: .75; 
             } 
            }
-        </style>`
+        </style>
+        <body>
+        <div class="wrapper">
+        <p>${answers.name}</p>
+        ${
+            answers.location
+              ? `<a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/${
+                  answers.location
+                }"><i class="fas fa-location-arrow"></i> ${
+                  answers.location
+                }</a>`
+              : ""
           }
-  
-          module.exports = generateHTML;
+        <p>${answers.bio}</p>
+        <p><a href=${answers.html_url}>GitHub</a></p>
+        <p>${answers.stars} Starred Repos</p>
+        <p><a href=${answers.blog}>Blog</a></p>
+        <p>${answers.repos} Repos</p>
+        <p>${answers.login}</p>
+        <p>${answers.followers} Followers</p>
+        <p>${answers.following} Following</p>
+        <br>
+        <br>
+        <img src=${answers.avatar_url}></img>
+        </div>
+        </body>
+        </html>
+
+        `
+}
+
+module.exports = generateHTML;
+
+
