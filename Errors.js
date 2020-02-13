@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Google Inc. All rights reserved.
+ * Copyright 2018 Google Inc. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,20 +21,8 @@ try {
   asyncawait = false;
 }
 
-if (asyncawait) {
-  const {helper} = require('./lib/helper');
-  const api = require('./lib/api');
-  for (const className in api) {
-    // Puppeteer-web excludes certain classes from bundle, e.g. BrowserFetcher.
-    if (typeof api[className] === 'function')
-      helper.installAsyncStackHooks(api[className]);
-  }
-}
-
 // If node does not support async await, use the compiled version.
-const Puppeteer = asyncawait ? require('./lib/Puppeteer') : require('./node6/lib/Puppeteer');
-const packageJson = require('./package.json');
-const preferredRevision = packageJson.puppeteer.chromium_revision;
-const isPuppeteerCore = packageJson.name === 'puppeteer-core';
-
-module.exports = new Puppeteer(__dirname, preferredRevision, isPuppeteerCore);
+if (asyncawait)
+  module.exports = require('./lib/Errors');
+else
+  module.exports = require('./node6/lib/Errors');
